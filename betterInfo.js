@@ -36,6 +36,6 @@
 
     function setInfoButton(i) {
         let marketId = String(document.getElementById('itemCardinventory_' + i).querySelector('.cardActions').getElementsByClassName('cardAction')[1].onclick).split('(')[2].split(',')[0];
-        window.open('https://krunker.io/social.html?p=market&i=' + marketId,'popup','width=400,height=800')
+        window.open('https://krunker.io/social.html?p=market&i=' + marketId,'popup','width=400,height=600')
     }
 })();
