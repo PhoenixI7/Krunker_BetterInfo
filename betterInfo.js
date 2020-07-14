@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Krunker Better Info
 // @namespace    http://tampermonkey.net/
-// @version      v2.0.0
+// @version      v2.1.0
 // @description  Get Info Faster
 // @author       Phoenixi7
 // @iconURL      https://phoenixpwn.com/phoenix.png
@@ -126,7 +126,7 @@
     async function returnCost(win, i) {
         if (win.document.getElementById('itemCardmarket_0')) {
             var price = win.document.getElementById('itemCardmarket_0').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0];
-            document.getElementsByClassName('pItemDesc')[0].innerHTML = price + " KR";
+            document.getElementsByClassName('pItemDesc')[0].innerHTML = '<ul style="list-style-type:none; padding-left: 0px; margin-top: 0px;"><li>' + 'Cheapest: ' + price + " KR" + '</li><li>' + 'Recommended: ' + recommendedListVal(win) +'</li></ul>';
             await timer(100);
             win.close();
         } else if (win.document.getElementById('marketList').querySelector('div')) {
@@ -138,6 +138,35 @@
         } else {
             await timer(10);
             returnCost(win, i);
+        }
+    }
+
+    function recommendedListVal(win) {
+        if (win.document.getElementById('itemCardmarket_3')) {
+            let num1 = parseInt(win.document.getElementById('itemCardmarket_0').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[0] + win.document.getElementById('itemCardmarket_0').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[1]);
+            let num2 = parseInt(win.document.getElementById('itemCardmarket_1').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[0] + win.document.getElementById('itemCardmarket_1').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[1]);
+            let num3 = parseInt(win.document.getElementById('itemCardmarket_2').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[0] + win.document.getElementById('itemCardmarket_2').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[1]);
+            let num4 = parseInt(win.document.getElementById('itemCardmarket_3').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[0] + win.document.getElementById('itemCardmarket_3').getElementsByClassName('marketPrice')[0].innerHTML.split('<')[0].split(',')[1]);
+
+            if (num2 - num1 >= num4 - num2 && num1 > 2000) {
+                return recommendPrice(num1, num2, num3, num4) + " - Don't Sell";
+            } else if (num2 - num1 >= (num4 - num2)*2) {
+                return recommendPrice(num1, num2, num3, num4) + " - Don't Sell";
+            } else {
+                return recommendPrice(num1, num2, num3, num4) + " KR";
+            }
+        } else { return 'Unkown'}
+    } recommendedListVal();
+
+    function recommendPrice(num1, num2, num3, num4) {
+        let r1 = num2 - num1;
+        let r2 = num3 - num2;
+        let r3 = num4 - num3;
+        let avg = (r1 + r2 + r3)/3;
+        if (num1 > 1000) {
+            return (Math.round((num1 - avg)/100))*100;
+        } else if (num1 > 100) {
+            return (Math.round((num1 - avg)/10))*10;
         }
     }
 })();
